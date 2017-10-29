@@ -193,7 +193,7 @@ gulp.task('styles', ['wiredep'], function() {
 // ### Scripts
 // `gulp scripts` - Runs JSHint then compiles, combines, and optimizes Bower JS
 // and project JS.
-gulp.task('scripts', ['jshint'], function() {
+gulp.task('scripts', function() {
   var merged = merge();
   manifest.forEachDependency('js', function(dep) {
     merged.add(
@@ -254,18 +254,10 @@ gulp.task('clean', require('del').bind(null, [path.dist]));
 // build step for that asset and inject the changes into the page.
 // See: http://www.browsersync.io
 gulp.task('watch', function() {
-  browserSync.init({
-    files: ['{lib,templates}/**/*.php', '*.php'],
-    proxy: config.devUrl,
-    snippetOptions: {
-      whitelist: ['/wp-admin/admin-ajax.php'],
-      blacklist: ['/wp-admin/**']
-    }
-  });
   gulp.watch([path.source + 'styles/**/*'], ['styles']);
-  gulp.watch([path.source + 'scripts/**/*'], ['jshint', 'scripts']);
-  gulp.watch([path.source + 'fonts/**/*'], ['fonts']);
-  gulp.watch([path.source + 'images/**/*'], ['images']);
+  gulp.watch([path.source + 'scripts/**/*'], ['scripts']);
+  //gulp.watch([path.source + 'fonts/**/*'], ['fonts']);
+  //gulp.watch([path.source + 'images/**/*'], ['images']);
   gulp.watch(['bower.json', 'assets/manifest.json'], ['build']);
 });
 
@@ -275,7 +267,6 @@ gulp.task('watch', function() {
 gulp.task('build', function(callback) {
   runSequence('styles',
               'scripts',
-              ['fonts', 'images'],
               callback);
 });
 
